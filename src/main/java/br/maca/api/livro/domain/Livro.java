@@ -1,6 +1,6 @@
 package br.maca.api.livro.domain;
 
-import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,28 +13,27 @@ public class Livro {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_livro")
-	
+	//@Column(name = "id_livro")
 	private Long IdLivro;
 	
 	@NotEmpty (message = "o campo Titulo é obrigatório!")
 	private String Titulo;
 	
-	@NotEmpty (message = "o campo Genero é obrigatório!")
+	@NotEmpty (message = "o campo Gênero é obrigatório!")
 	private String Genero;
 	
-	@NotEmpty (message = "o campo Edicao é obrigatório!")
+	@NotEmpty (message = "o campo Edição é obrigatório!")
 	private String Edicao;
 	
 	@NotEmpty (message = "o campo ISBN é obrigatório!")
 	private String ISBN;
 	
-	@NotEmpty (message = "o campo Autor é obrigatório!")
 	@ManyToOne
+	@NotEmpty (message = "o campo Autor é obrigatório!")
 	private Autor Autor;
 	
-	@NotEmpty (message = "o campo Editoria é obrigatório!")
 	@ManyToOne
+	@NotEmpty (message = "o campo Editoria é obrigatório!")
 	private Editoria Editoria;
 	
 	
@@ -43,7 +42,7 @@ public class Livro {
 	
 	public Livro (Long idLivro, String titulo, String genero, String edicao, String isbn, Autor autor, Editoria editoria) {
 		
-		this.Autor = autor;
+		this.IdLivro = idLivro;
 		this.Titulo = titulo;
 		this.Genero = genero;
 		this.Edicao = edicao;

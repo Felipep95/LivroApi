@@ -1,10 +1,13 @@
 package br.maca.api.livro.resources;
 
 
+	import java.net.URI;
 	import java.util.List;
-	import java.util.Optional;
+
 
 	import org.springframework.beans.factory.annotation.Autowired;
+	import org.springframework.http.ResponseEntity;
+	import org.springframework.validation.annotation.Validated;
 	import org.springframework.web.bind.annotation.DeleteMapping;
 	import org.springframework.web.bind.annotation.GetMapping;
 	import org.springframework.web.bind.annotation.PathVariable;
@@ -13,41 +16,48 @@ package br.maca.api.livro.resources;
 	import org.springframework.web.bind.annotation.RequestBody;
 	import org.springframework.web.bind.annotation.RequestMapping;
 	import org.springframework.web.bind.annotation.RestController;
-	import br.maca.api.livro.repository.LivrosRepository;
+	import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+	import br.maca.api.livro.service.LivrosService;
 	import br.maca.api.livro.domain.Livro;
+	
 
 	@RestController
 	@RequestMapping("/livros")
 	public class LivrosResources {
 		
 		@Autowired
-		private LivrosRepository livrosRepository;
+		private LivrosService livrosService;
 		
-		@GetMapping(value = "/livros")
+		//@GetMapping(value = "/livros")
+		@GetMapping
 		public List<Livro> listarTodas() {
-			return livrosRepository.findAll();
+			return livrosService.listar();
 		}
 		
-		@PostMapping(value = "/livros")
-		public void salvar (Livro livro) {
-			livrosRepository.save(livro);
-		}
+		//@PostMapping(value = "/livros")
+		@PostMapping
+		public ResponseEntity<Void> salvar(@RequestBody @Validated Livro livro) {
+			livrosService.salvar(livro);
+			
+			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+								.buildAndExpand(livro.getIdLivro()).toUri();
+			return ResponseEntity.created(uri).build();
+			}
 		
 		@PutMapping
 		public void atualizar (@RequestBody Livro livro) {
-			livrosRepository.save(livro);
+			livrosService.atualizar(livro);
 		}
 		
-		@DeleteMapping
-		public void deletar(@RequestBody Livro livro) {
-			livrosRepository.delete(livro);
+		@DeleteMapping(value = "/{id}")
+		public void deletar(@PathVariable("id") Long IdLivro) throws Exception {
+			livrosService.deletarPorId(IdLivro);
 		}
 		
 		@GetMapping(value = "/{id}")
-		public Optional<Livro> buscarPorId(@PathVariable("id") Long idLivro) {
-			return livrosRepository.findById(idLivro);
-		}
-		
+		public ResponseEntity<Livro> buscarPorId(@PathVariable("id") Long IdLivro) throws Exception {
+			return ResponseEntity.ok(livrosService.buscarPorId(IdLivro));
+		}	
 	}
 
 

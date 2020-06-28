@@ -2,10 +2,11 @@ package br.maca.api.livro.resources;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,24 +17,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.maca.api.livro.repository.AutoresRepository;
+import br.maca.api.livro.service.AutoresService;
 import br.maca.api.livro.domain.Autor;
+
 
 @RestController
 @RequestMapping("/autores")
 public class AutoresResources {
 	
 	@Autowired
-	private AutoresRepository autoresRepository;
+	private AutoresService autoresService;
 	
-	@GetMapping(value = "/autores")
+	//@GetMapping(value = "/autores")
+	@GetMapping
 	public List<Autor> listarTodas() {
-		return autoresRepository.findAll();
+		return autoresService.listar();
 	}
 	
-	@PostMapping(value = "/autores")
-	public ResponseEntity<Void> salvar(@RequestBody Autor autor) {
-		autoresRepository.save(autor);
+	//@PostMapping(value = "/autores")
+	@PostMapping
+	public ResponseEntity<Void> salvar(@RequestBody @Validated Autor autor) {
+		autoresService.salvar(autor);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 							.buildAndExpand(autor.getIdAutor()).toUri();
@@ -42,18 +46,17 @@ public class AutoresResources {
 	
 	@PutMapping
 	public void atualizar (@RequestBody Autor autor) {
-		autoresRepository.save(autor);
+		autoresService.atualizar(autor);
 	}
 	
-	@DeleteMapping
-	public void deletar(@RequestBody Autor autor) {
-		autoresRepository.delete(autor);
+	@DeleteMapping(value = "/{id}")
+	public void deletar(@PathVariable("id") Long IdAutor) throws Exception {
+		autoresService.deletarPorId(IdAutor);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Autor> buscarPorId(@PathVariable("id") Long idAutor) {
-		return autoresRepository.findById(idAutor).map(autor ->
-		ResponseEntity.ok(autor)).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<Autor> buscarPorId(@PathVariable("id") Long IdAutor) throws Exception {
+		return ResponseEntity.ok(autoresService.buscarPorId(IdAutor));
 	}
 	
 }

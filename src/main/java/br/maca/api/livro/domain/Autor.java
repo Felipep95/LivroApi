@@ -4,11 +4,14 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Autor {
@@ -18,13 +21,14 @@ public class Autor {
 	@Column(name = "id_autor")
 	private Long IdAutor;
 	
-	@NotEmpty (message = "O campo Nome não pode ser vazio")
+	@NotEmpty (message = "O campo Nome é obrigatório!")
 	private String Nome;
 	
-	@NotEmpty (message = "O campo Biografia não pode ser vazio")
+	@NotEmpty (message = "O campo Biografia é obrigatório!")
 	private String Biografia;
 	
-	@OneToMany
+	@JsonIgnoreProperties("Autor")
+	@OneToMany(mappedBy = "Autor"/*targetEntity = Livro.class, fetch = FetchType.LAZY*/)
 	private List <Livro> livros;
 	
 	public Autor () {}
@@ -34,6 +38,7 @@ public class Autor {
 		this.IdAutor = idAutor;
 		this.Nome = nome;
 		this.Biografia = biografia;
+	
 	}
 
 	public Long getIdAutor() {
@@ -60,6 +65,14 @@ public class Autor {
 		Biografia = biografia;
 	}
 
+	/*public Livro getLivro() {
+		return Livro;
+	}
+
+	public void setLivro(Livro livro) {
+		Livro = livro;
+	}*/
+
 	public List<Livro> getLivros() {
 		return livros;
 	}
@@ -67,7 +80,7 @@ public class Autor {
 	public void setLivros(List<Livro> livros) {
 		this.livros = livros;
 	}
-	
+
 	
 }
 	
