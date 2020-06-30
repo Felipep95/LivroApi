@@ -38,7 +38,4 @@ public class LivrosService {
 	public List<Livro> listar() {
 		return livrosRepository.findAll();
 	}
-
-	
-	
 }

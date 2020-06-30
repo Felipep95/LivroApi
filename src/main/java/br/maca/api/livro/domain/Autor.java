@@ -2,9 +2,7 @@ package br.maca.api.livro.domain;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +16,7 @@ public class Autor {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_autor")
+
 	private Long IdAutor;
 	
 	@NotEmpty (message = "O campo Nome é obrigatório!")
@@ -27,20 +25,10 @@ public class Autor {
 	@NotEmpty (message = "O campo Biografia é obrigatório!")
 	private String Biografia;
 	
-	@JsonIgnoreProperties("Autor")
-	@OneToMany(mappedBy = "Autor"/*targetEntity = Livro.class, fetch = FetchType.LAZY*/)
+	@JsonIgnoreProperties("autor")
+	@OneToMany(mappedBy = "Autor")
 	private List <Livro> livros;
 	
-	public Autor () {}
-	
-	public Autor (Long idAutor, String nome, String biografia) {
-		
-		this.IdAutor = idAutor;
-		this.Nome = nome;
-		this.Biografia = biografia;
-	
-	}
-
 	public Long getIdAutor() {
 		return IdAutor;
 	}
@@ -65,14 +53,6 @@ public class Autor {
 		Biografia = biografia;
 	}
 
-	/*public Livro getLivro() {
-		return Livro;
-	}
-
-	public void setLivro(Livro livro) {
-		Livro = livro;
-	}*/
-
 	public List<Livro> getLivros() {
 		return livros;
 	}
@@ -80,9 +60,4 @@ public class Autor {
 	public void setLivros(List<Livro> livros) {
 		this.livros = livros;
 	}
-
-	
 }
-	
-	
-
